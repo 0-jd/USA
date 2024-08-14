@@ -25,6 +25,11 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
+// Periodically make a request to keep the app alive
+setInterval(() => {
+  fetch(`http://localhost:${port}`);
+}, 300000); // every 5 minutes
+
 const stringSession = new StringSession(process.env.StringSession || ""); // fill this later with the value from session.save()
 
 const client_options = {
