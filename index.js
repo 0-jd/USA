@@ -25,12 +25,6 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
-// Periodically make a request to keep the app alive
-setInterval(async () => {
-  fetch(`http://localhost:${port}`);
-  await client.sendMessage("me",{ message: "Pinged"});
-}, 600000); // every 10 minutes
-
 const stringSession = new StringSession(process.env.StringSession || ""); // fill this later with the value from session.save()
 
 const client_options = {
@@ -143,6 +137,12 @@ async function main() {
   }, new NewMessage({chats: Channels}));
 
   console.log('Listening for messages...');
+
+  // Periodically make a request to keep the app alive
+setInterval(async () => {
+  fetch(`http://localhost:${port}`);
+  await client.sendMessage("me",{ message: "Pinged"});
+}, 600000); // every 10 minutes
 
 }
 
