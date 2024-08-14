@@ -7,10 +7,14 @@ import { NewMessage } from "telegram/events/index.js";
 import { generateRandomBigInt, readBigIntFromBuffer, readBufferFromBigInt, sha256 } from "telegram/Helpers.js";
 import bigInt from "big-integer";
 import express from 'express';
+import selfbot from './discord.js'
+
+dotenv.config();
 
 const Channels = [1001923634336, 1002149233822];
 
-dotenv.config();
+console.log(selfbot)
+
 
 const app = express()
 const port = process.env.PORT || 4000;
@@ -24,9 +28,10 @@ app.listen(port, () => {
 })
 
 // Periodically make a request to keep the app alive
-setInterval(() => {
+setInterval(async () => {
   fetch(`http://localhost:${port}`);
-}, 300000); // every 5 minutes
+  await client.getMe();
+}, 600000); // every 10 minutes
 
 const stringSession = new StringSession(process.env.StringSession || ""); // fill this later with the value from session.save()
 
@@ -125,7 +130,6 @@ async function main() {
   });
 
   console.log("You should now be connected.");
-  await client.getMe();
   // console.log(client.session.save());
 
   client.addEventHandler((event) => {
@@ -134,7 +138,7 @@ async function main() {
       // Check if the message matches the regex
       if (monthRegex.test(message)) {
         console.log('Matched message:', message);
-        makeCall('@ahru284', client)
+        // makeCall('@ahru284', client)
       } else {
         console.log("Didn't match")
       }
