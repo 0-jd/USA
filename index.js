@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import { NewMessage } from "telegram/events/index.js";
 import { generateRandomBigInt, readBigIntFromBuffer, readBufferFromBigInt, sha256 } from "telegram/Helpers.js";
 import bigInt from "big-integer";
+import express from 'express';
 
 const Channels = [1001923634336, 1002149233822];
 
@@ -13,8 +14,25 @@ dotenv.config({
   path: `.env.${process.env.NODE_ENV || 'test'}`, // Defaults to '.env.test'
 });
 
+const app = express()
+const port = process.env.PORT || 4000;
+
+app.get('/', (req, res) => {
+  res.send('Hello World!')
+})
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`)
+})
 
 const stringSession = new StringSession(process.env.StringSession || ""); // fill this later with the value from session.save()
+
+const client_options = {
+  systemLanguage: "en",
+  systemVersion: "Windows 10",
+  deviceType: "Desktop",
+  appVersion: "5.3.2",
+}
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -79,8 +97,11 @@ async function makeCall(userId, client) {
 
 async function main() {
 
+
+  // console.log(discord.toString());
+
   console.log("Loading interactive example...");
-  const client = new TelegramClient(stringSession, Number(process.env.apiId), process.env.apiHash, {
+  const client = new TelegramClient(stringSession, Number(process.env.apiId), process.env.apiHash, client_options , {
     connectionRetries: 5,
   });
 

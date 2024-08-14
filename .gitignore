@@ -1,3 +1,5 @@
 node_modules
 Resources
 message.txt
+.env
+.env.test
