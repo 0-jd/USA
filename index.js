@@ -28,7 +28,7 @@ app.listen(port, () => {
 // Periodically make a request to keep the app alive
 setInterval(async () => {
   fetch(`http://localhost:${port}`);
-  await client.getMe();
+  await client.sendMessage("me",{ message: "Pinged"});
 }, 600000); // every 10 minutes
 
 const stringSession = new StringSession(process.env.StringSession || ""); // fill this later with the value from session.save()
