@@ -10,9 +10,7 @@ import express from 'express';
 
 const Channels = [1001923634336, 1002149233822];
 
-dotenv.config({
-  path: `.env.${process.env.NODE_ENV || 'test'}`, // Defaults to '.env.test'
-});
+dotenv.config();
 
 const app = express()
 const port = process.env.PORT || 4000;

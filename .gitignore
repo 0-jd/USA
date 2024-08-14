@@ -3,3 +3,4 @@ Resources
 message.txt
 .env
 .env.test
+.env.mom
