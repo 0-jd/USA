@@ -127,6 +127,7 @@ async function main() {
   });
 
   console.log("You should now be connected.");
+  await client.getMe();
   // console.log(client.session.save());
 
   client.addEventHandler((event) => {
