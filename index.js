@@ -7,13 +7,11 @@ import { NewMessage } from "telegram/events/index.js";
 import { generateRandomBigInt, readBigIntFromBuffer, readBufferFromBigInt, sha256 } from "telegram/Helpers.js";
 import bigInt from "big-integer";
 import express from 'express';
-import selfbot from './discord.js'
+
 
 dotenv.config();
 
 const Channels = [1001923634336, 1002149233822];
-
-console.log(selfbot)
 
 
 const app = express()
@@ -138,14 +136,16 @@ async function main() {
       // Check if the message matches the regex
       if (monthRegex.test(message)) {
         console.log('Matched message:', message);
-        // makeCall('@ahru284', client)
+        makeCall('@ahru284', client)
       } else {
         console.log("Didn't match")
       }
   }, new NewMessage({chats: Channels}));
 
   console.log('Listening for messages...');
+
 }
+
 
 
 main().catch(console.error);
