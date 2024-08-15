@@ -1,6 +1,4 @@
 node_modules
-Resources
+Resource
 message.txt
 .env
-.env.test
-.env.mom
