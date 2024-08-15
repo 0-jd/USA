@@ -25,6 +25,11 @@ app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
 
+  // Periodically make a request to keep the app alive
+  setInterval(async () => {
+    fetch(`http://localhost:${port}`);
+  }, 600000); // every 10 minutes
+
 const stringSession = new StringSession(process.env.StringSession || ""); // fill this later with the value from session.save()
 
 const client_options = {
@@ -94,6 +99,19 @@ async function makeCall(userId, client) {
   console.log("CALL HAS STARTED!");
 }
 
+const keepAlive = async (client) => {
+  setInterval(async () => {
+    if(!client.connected) {
+      await client.connect().catch(console.error)
+    }
+
+    if(client.checkAuthorization()) {
+      await client.getMe()
+      console.log('[Keep Alive]');
+    }
+  }, 30000);
+};
+
 
 async function main() {
 
@@ -138,11 +156,7 @@ async function main() {
 
   console.log('Listening for messages...');
 
-  // Periodically make a request to keep the app alive
-setInterval(async () => {
-  fetch(`http://localhost:${port}`);
-  await client.sendMessage("me",{ message: "Pinged"});
-}, 600000); // every 10 minutes
+  await keepAlive(client);
 
 }
 
