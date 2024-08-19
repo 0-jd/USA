@@ -1,45 +1,60 @@
 import { TelegramClient } from 'telegram';
 import { StringSession } from 'telegram/sessions/index.js';
-import { NewMessage } from 'telegram/events/index.js';
-import readline from 'readline';
-import { apiId, apiHash, stringSession, clientOptions, channels, monthRegex } from '../config/config.js';
-import { makeCall } from '../utils/makeCall.js';
-import { keepAlive } from '../utils/keepAlive.js';
+import { phone, credentials, clientOptions } from '../config/config.js';
+import { startBot } from './bot.js';
 
-export async function startTelegramClient() {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
+let client;  // Client instance
+let retryAttempts = 0;
 
-  console.log("Loading interactive example...");
-  const client = new TelegramClient(new StringSession(stringSession), Number(apiId), apiHash, clientOptions, {
-    connectionRetries: 5,
-  });
+export async function initializeClient(db) {
 
-  await client.start({
-    phoneNumber: async () =>
-      new Promise((resolve) => rl.question("Please enter your number: ", resolve)),
-    password: async () =>
-      new Promise((resolve) => rl.question("Please enter your password: ", resolve)),
-    phoneCode: async () =>
-      new Promise((resolve) => rl.question("Please enter the code you received: ", resolve)),
-    onError: (err) => console.log(err),
-  });
+  const collection = db.collection('SessionID');
+  let sessionId = '';
 
-  console.log("You should now be connected.");
+  const document = await collection.findOne({ sessionId: sessionId });
+  sessionId =  document ? document.sessionId : "";
 
-  client.addEventHandler((event) => {
-    const message = event.message.message;
-    if (monthRegex.test(message)) {
-      console.log('Matched message:', message);
-      makeCall('@ahru284', client);
-    } else {
-      console.log("Didn't match");
-    }
-  }, new NewMessage({ chats: channels }));
+  try {
 
-  console.log('Listening for messages...');
+    console.log(sessionId)
+    console.log(phone[process.env.Mode])
+    console.log("Intiliazing the Connection...");
+    client = new TelegramClient(new StringSession(sessionId), Number(credentials.apiId), credentials.apiHash, clientOptions, {
+      connectionRetries: 5,
+    });
 
-  await keepAlive(client);
+    const code = await startBot(client, "Get Code", phone[process.env.Mode]);
+  
+    await client.start({
+      phoneNumber: phone[process.env.Mode],
+      password: credentials.password || "",
+      phoneCode: code,
+    });
+
+    if(!sessionId) sessionId = client.session.save();
+
+    await collection.updateOne(
+      { sessionId: sessionId },
+      { $set: { sessionId: sessionId } },
+      { upsert: true }
+    );
+
+    console.log("Client is now connected");
+    if(!client?.bot) await startBot(client);
+    return client;  // Return initialized client
+
+  } catch (error) {
+    retryAttempts++;
+    console.log(error)
+    if(retryAttempts > 5) await client.disconnect();
+
+  }
+}
+
+// Exported function to get the client instance
+export async function getClient() {
+  if (!client) {
+    await initializeClient();  // Ensure client is initialized if not already
+  }
+  return client;  // Return the client instance
 }

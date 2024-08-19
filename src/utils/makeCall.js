@@ -1,5 +1,5 @@
 import { Api } from 'telegram';
-import { generateRandomBigInt,readBufferFromBigInt, readBigIntFromBuffer, sha256 } from 'telegram/Helpers.js';
+import { generateRandomBigInt, readBufferFromBigInt, readBigIntFromBuffer, sha256 } from 'telegram/Helpers.js';
 import bigInt from 'big-integer';
 
 export async function makeCall(userId, client) {
@@ -23,7 +23,7 @@ export async function makeCall(userId, client) {
   const ga = g.modPow(a, p);
   const gaHash = await sha256(readBufferFromBigInt(ga, 256, false, false));
 
-  await client.invoke(new Api.phone.RequestCall({
+  const call = await client.invoke(new Api.phone.RequestCall({
     userId,
     gAHash: gaHash,
     randomId: Math.floor(Math.random() * 0x7ffffffa),
@@ -34,7 +34,25 @@ export async function makeCall(userId, client) {
       udpReflector: true,
       libraryVersions: ["4.0.0", "3.0.0", "2.7.7", "2.4.4"]
     })
-  }));
+  }))
 
   console.log("CALL HAS STARTED!");
+
+
+  // Create a Promise to wait for the call status
+  const status = await new Promise((resolve) => {
+    const handler = (async (update) => {
+
+      if (update.className === 'UpdatePhoneCall' && update?.phoneCall) {
+        resolve(update.phoneCall.reason.className.includes('Disconnect') ? true : false); // True means picked up, false means declined
+        client.removeEventHandler(handler);
+      }
+    });
+    client.addEventHandler(handler)
+  });
+
+  return status;
+
 }
+
+

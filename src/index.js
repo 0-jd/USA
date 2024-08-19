@@ -1,5 +1,12 @@
-import { startTelegramClient } from './services/telegram.js';
-import { startWebServer } from './services/webServer.js';
+// src/index.js
+import { initializeClient } from './services/telegram.js';
+import { setupMessageHandler } from './services/messageHandler.js';
+import { keepAlive } from './utils/keepAlive.js';
+import { StartDB } from './services/mongoDB.js'
 
-startWebServer();
-startTelegramClient().catch(console.error);
+(async () => {
+  const DB = await StartDB();
+  const client = await initializeClient(DB);
+  await setupMessageHandler();
+  await keepAlive(client);
+})();

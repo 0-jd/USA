@@ -7,9 +7,10 @@
     "start": "node ."
   },
   "dependencies": {
-    "discord.js-selfbot-v13": "^3.3.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "grammy": "^1.29.0",
+    "mongodb": "^6.8.0",
     "telegram": "^2.23.10"
   }
 }

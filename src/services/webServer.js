@@ -1,5 +1,5 @@
 import express from 'express';
-import { port } from '../config/config.js';
+import { misc } from '../config/config.js';
 
 export function startWebServer() {
   const app = express();
@@ -8,7 +8,7 @@ export function startWebServer() {
     res.send('Hello World!');
   });
 
-  app.listen(port, () => {
-    console.log(`App listening on port ${port}`);
+  app.listen(misc.port, () => {
+    console.log(`App listening on port ${misc.port}`);
   });
 }

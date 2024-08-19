@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { port } from '../config/config.js';
+import { misc } from '../config/config.js';
 
 export const keepAlive = async (client) => {
   setInterval(async () => {
@@ -15,6 +15,6 @@ export const keepAlive = async (client) => {
 
   // Periodically make a request to keep the app alive
   setInterval(async () => {
-    fetch(`http://localhost:${port}`);
+    fetch(`http://localhost:${misc.port}`);
   }, 600000); // every 10 minutes
 };
