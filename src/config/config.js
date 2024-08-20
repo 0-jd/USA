@@ -25,7 +25,7 @@ export const clientOptions = {
 };
 
 export const chatsID = {
-  slotGrps : ['-1001567966058', '-1001923634336', '-1002148769898'],
+  slotGrps : ['1001567966058', '1001923634336', '1002148769898'],
   discussionGrps: ['-1001812734149', '-1002231374270', ],
   testGrps: '-4230082874',
   AlertGrp: '-4579648417',

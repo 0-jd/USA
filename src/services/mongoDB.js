@@ -17,7 +17,7 @@ export async function StartDB() {
   try {
 
     await client.connect();
-    const db = await client.db(process.env.Mode)
+    const db = client.db(process.env.Mode)
     console.log("Database is now connected.");
     return db;
     
