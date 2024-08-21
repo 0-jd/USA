@@ -1,7 +1,8 @@
 import { NewMessage } from 'telegram/events/index.js';
-import { sendAlert, somethingElse } from '../utils/sendAlert.js'
+import { sendAlert, somethingElse } from './sendAlert.js'
 import { chatsID, misc } from '../config/config.js';
 import { getClient } from '../services/telegram.js'
+import fs from 'fs';
 
 export async function setupMessageHandler() {
   
@@ -23,3 +24,7 @@ export async function setupMessageHandler() {
 
   console.log('Listening for messages...');
 }
+
+// Command handler for the telegram Bot.
+
+
