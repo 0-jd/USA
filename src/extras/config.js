@@ -41,15 +41,17 @@ export const chatsID = {
 export const misc = {
   mode : process.env.Mode,
   port: process.env.PORT || 4000,
-  channels: [1001923634336, 1002149233822, 4230082874],
   monthRegex: new RegExp(
     '\\b(' +
-    'Sept(?:ember)?|' +
-    'Sep(?:tember)?|' +
-    'Oct(?:ober)?|' +
-    'Nov(?:ember)?|' +
-    'Dec(?:ember)?' +
-    ')\\b',
+      'Dec(?:ember)?|' +
+      'Jan(?:uary)?|' +
+      'Feb(?:ruary)?|' +
+      'Mar(?:ch)?|' +
+      'Apr(?:il)?|' +
+      'May|' +
+      'Jun(?:e)?|' +
+      'Jul(?:y)?' +
+      ')\\b',
     'i'
   ),
 }

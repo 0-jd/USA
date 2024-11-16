@@ -1,6 +1,7 @@
 import { NewMessage } from 'telegram/events/index.js';
 import { sendAlert } from './../Utils/sendAlert.js'
 import { chatsID, misc } from './../../extras/config.js';
+let freeze = false;
 
 export async function setupMessageHandler(client) {
 
@@ -13,7 +14,12 @@ export async function setupMessageHandler(client) {
     const context = [ event.message.message, event.message.date, event.message.fromId.userId, event.message.peerId.channelId, event.message.id]
     const message = event.message.message;
     console.log(message)
-    misc.monthRegex.test(message) ? sendAlert(client, context, true) : console.log("didn't match");
+    
+    if(misc.monthRegex.test(message) && !freeze) {
+      sendAlert(client, context, true)
+      freeze = true;
+      setTimeout(() =>freeze = false, 300 * 1000);
+    }
 
   }, new NewMessage({ chats: newGrp }));
 
