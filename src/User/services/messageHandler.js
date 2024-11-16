@@ -5,8 +5,7 @@ import { chatsID, misc } from './../../extras/config.js';
 export async function setupMessageHandler(client) {
 
   const newGrp = Object.keys(chatsID.slotGrps);
-  if (client.mode == 'test' ) newGrp.push(...chatsID.testGrps)
-    console.log(newGrp)
+  newGrp.push(...chatsID.testGrps)
 
   client.addEventHandler(async (event) => {
 
