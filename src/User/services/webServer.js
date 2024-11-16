@@ -1,5 +1,5 @@
 import express from 'express';
-import { misc } from '../config/config.js';
+import { misc } from '../../extras/config.js';
 
 export function startWebServer() {
   const app = express();

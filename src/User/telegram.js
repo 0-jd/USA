@@ -1,35 +1,42 @@
 import { TelegramClient } from 'telegram';
 import { Api } from 'telegram';
 import { StringSession } from 'telegram/sessions/index.js';
-import { phone, credentials, clientOptions } from '../config/config.js';
-import { getCode } from './bot.js';
+import { misc, phone, credentials, clientOptions } from '../extras/config.js';
+import readline from "readline";
 
 let retryAttempts = 0;
 let client;
 
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
 
-export async function initializeClient(db, bot) {
 
+export async function initializeClient(db) {
 
   const collection = db.collection('SessionID');
-  let sessionId = '';
   let number = phone[process.env.Mode];
 
   const document = await collection.findOne({ sessionId: { $exists: true } });
-  sessionId =  document ? document.sessionId : "";
+  const sessionId =  document ? document.sessionId : "";
 
 
   try {
 
     console.log("Intiliazing the Connection...");
-    client = new TelegramClient(new StringSession(sessionId), Number(credentials.apiId), credentials.apiHash, clientOptions, {
+    let client = new TelegramClient(new StringSession(sessionId), Number(credentials.apiId), credentials.apiHash, clientOptions, {
       connectionRetries: 5,
     });
-
+    
+    console.log(`Using Phone Number: ${number}`);
     await client.start({
       phoneNumber: number,
       password: credentials.password || "",
-      phoneCode: async () => new Promise( (resolve) => resolve(getCode(number)) ),
+      phoneCode: async () =>
+        new Promise((resolve) =>
+          rl.question("Please enter the code you received: ", resolve)
+        ),
       onError: (err) => console.log(err),
     });
 
@@ -41,23 +48,18 @@ export async function initializeClient(db, bot) {
       { upsert: true }
     );
 
-    client.bot = bot;
+    client.db = db;
+    client.mode = misc.mode;
     console.log("Client is now connected");
+    if(client.mode == 'test') console.log("<<<<<<<<<< CLIENT IS DEPLOYED IN TEST MODE >>>>>>>>>>")
     return client; 
 
 
   } catch (error) {
+
     retryAttempts++;
     console.log(error)
     if(retryAttempts > 5) await client.disconnect();
 
   }
-}
-
-// Exported function to get the client instance
-export async function getClient() {
-  if (!client) {
-    await initializeClient();  // Ensure client is initialized if not already
-  }
-  return client;  // Return the client instance
 }

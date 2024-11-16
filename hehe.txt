@@ -1,0 +1,21 @@
+🚨 **SLOTS OPEN**
+
+🗓️ **Slot Date:** __{available date}__
+📅 **Current Date:** __\{current date\}__
+🛠️ `Slot Info Provider:`
+
+{Info Provider}
+
+⚠️ **IMPORTANT**
+|| If you see this alert, ⚡ log in and book the appointment immediately. Time is critical. 
+However, if a follow-up message states, 🟢 "John is online," 🚫 do not log in. Close the tab, as John will likely book the slots. 
+But if you're already logged in, ✅ ignore the previous warnings and proceed to the appointment scheduling page to secure the earliest available date. ||
+
+🔑 **Credentials:**
+Tap to copy the credentials. || ( You can also save the password in your browser for quicker access. )  ||
+
+📧 **Email:** `{Email}`
+
+🔒 **Password:** `{Password}`
+
+🎉 After successfully booking, share the scheduled date in this group.

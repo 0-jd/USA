@@ -1,5 +1,5 @@
 import fetch from 'node-fetch';
-import { misc } from '../config/config.js';
+import { misc } from '../../extras/config.js';
 
 export const keepAlive = async (client) => {
   setInterval(async () => {

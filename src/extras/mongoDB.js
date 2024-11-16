@@ -22,7 +22,7 @@ export async function StartDB() {
     return db;
     
   } catch (err) {
-    console.log("\n\nEncountered an Error: \n", err)
+    console.log("\n\n=======================  Database Error:  =======================\n", err)
   }
 }
 
