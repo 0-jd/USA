@@ -8,10 +8,6 @@ export function startWebServer() {
     res.send('Hello World!');
   });
 
-  // app.get('/send-code/:code', (req, res) => {
-  //   res.send('Hello World!');
-  // });
-
   app.listen(misc.port, () => {
     console.log(`App listening on port ${misc.port}`);
   });

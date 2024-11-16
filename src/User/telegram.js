@@ -3,6 +3,7 @@ import { Api } from 'telegram';
 import { StringSession } from 'telegram/sessions/index.js';
 import { misc, phone, credentials, clientOptions } from '../extras/config.js';
 import readline from "readline";
+import { getCode } from './services/webServer.js';
 
 let retryAttempts = 0;
 let client;
@@ -29,14 +30,10 @@ export async function initializeClient(db) {
       connectionRetries: 5,
     });
     
-    console.log(`Using Phone Number: ${number}`);
     await client.start({
       phoneNumber: number,
       password: credentials.password || "",
-      phoneCode: async () =>
-        new Promise((resolve) =>
-          rl.question("Please enter the code you received: ", resolve)
-        ),
+      phoneCode: async () => new Promise( resolve(await getCode(number))), // I want the code to wait here till i give it a code from the link
       onError: (err) => console.log(err),
     });
 
